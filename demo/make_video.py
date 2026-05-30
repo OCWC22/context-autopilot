@@ -26,28 +26,31 @@ small = ImageFont.truetype(MENLO, 18, index=0)
 
 # (kind, text, color). kinds: banner, cmd, out, good, metric, muted, blank
 SCENES = [
-    [("banner", "Personal Coding Model Autopilot", TITLE),
-     ("muted", "local-first repo context · $0 · Beta Fund x EverMind hackathon", OUT),
+    [("banner", "Stop paying Claude to re-read your repo", TITLE),
+     ("muted", "Personal Coding Model Autopilot — local-first repo context, $0", OUT),
      ("blank", "", OUT)],
-    [("cmd", "autopilot index", PROMPT),
-     ("good", "  ✓ $0 local index -> .autopilot/SKILL.md + ARCHITECTURE.md (commit-versioned DAG)", GOOD),
-     ("out", "  83 files · 381 functions · 160 import + 981 call edges · version b26935e9", OUT),
-     ("out", "  built in 316 ms — frontier rediscovery would cost ~$0.24 / session", OUT)],
-    [("cmd", "python3 .autopilot/verify/verify_dag.py", PROMPT),
-     ("good", "  functions(py): claimed=374 actual=374 -> OK   (every claim is verifiable)", GOOD)],
-    [("cmd", "autopilot eval     # local-first (indexed) vs normal Claude Code", PROMPT),
-     ("out", "  config                  calls  tok_in   F1    tests", OUT),
-     ("muted", "  Claude Code (full ctx)    1    11947   0.23  pass", OUT),
-     ("blue", "  local-first (indexed)     0      299   0.50  pass", BLUE),
-     ("blank", "", OUT),
-     ("metric", "  TOKENS -98.7%   TIME -98.0%   COST -93.9%   F1 +0.32   success preserved", GOOD)],
-    [("cmd", "autopilot submit   # Butterbase (backend) + EverMind (memory)", PROMPT),
-     ("good", "  EverMind/EverOS: memory written  (LIVE — real API)", GOOD),
-     ("good", "  Butterbase: app_b197i2548pk2 — 3 tables, 9 rows written (LIVE)", GOOD),
-     ("blue", "  submission code build0530 · SUBMISSION.md · 27/27 tests pass", BLUE)],
-    [("banner", "-98.7% tokens · -98% time · success preserved", GOOD),
-     ("muted", "github.com/OCWC22/personal-coding-autopilot", OUT),
-     ("muted", "Built on EverMind memory + Butterbase backend", OUT)],
+    # the pain
+    [("banner", "The problem", TITLE),
+     ("out", "  Your repo is 359 KB  ~  90,000 tokens.", OUT),
+     ("warn", "  Claude Code re-discovers that structure every session — grep, read, repeat.", ORANGE),
+     ("muted", "  On agent/metered billing you pay frontier prices to relearn what you already know.", OUT)],
+    # the real example, side by side
+    [("cmd", "# real task:  \"fix the failing test\"  (same task, two ways)", PROMPT),
+     ("warn", "  NORMAL Claude Code   ->  explores files  ->  11,947 tokens sent to the model", ORANGE),
+     ("good", "  WITH AUTOPILOT      ->  DAG + SKILL.md already map it  ->  299 tokens (right slice)", GOOD),
+     ("muted", "  same patch · tests still pass", OUT)],
+    # the headline number
+    [("banner", "11,947  ->  299 tokens", GOOD),
+     ("metric", "  -98.7% tokens · -98% time · -94% cost · same result", GOOD),
+     ("muted", "  retrieval F1 +0.32 · 1 frontier call avoided", OUT)],
+    # how — the $0 .md + DAG
+    [("cmd", "autopilot index    # the $0 part, runs on every commit", PROMPT),
+     ("out", "  builds .autopilot/SKILL.md + ARCHITECTURE.md (DAG):", OUT),
+     ("out", "  every file, every function, the call graph — kept fresh, locally, for $0", OUT),
+     ("good", "  Claude Code reads THIS saved context, not the whole repo", GOOD)],
+    [("banner", "Built on EverMind + Butterbase  (LIVE)", GOOD),
+     ("blue", "  Butterbase app_b197i2548pk2 · EverMind memory · code build0530", BLUE),
+     ("muted", "  github.com/OCWC22/personal-coding-autopilot", OUT)],
 ]
 
 frames = Path(tempfile.mkdtemp(prefix="demo_frames_"))
