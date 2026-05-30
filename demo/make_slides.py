@@ -37,7 +37,7 @@ def slide(footer=True):
         p = tf.paragraphs[0]
         run = p.add_run(); run.text = "EverMind + Butterbase: LIVE  ·  app_b197i2548pk2  ·  build0530"
         run.font.size = Pt(10); run.font.color.rgb = MUTED
-        run2 = p.add_run(); run2.text = f"        {PAGE[0]}/6"; run2.font.size = Pt(10); run2.font.color.rgb = MUTED
+        run2 = p.add_run(); run2.text = f"        {PAGE[0]}/7"; run2.font.size = Pt(10); run2.font.color.rgb = MUTED
     return s
 
 
@@ -145,5 +145,18 @@ txt(tf, "11,947 → 299 tokens · 1 frontier call avoided · task success preser
 txt(tf, "Live now: Butterbase app app_b197i2548pk2 (real rows) · EverMind memory written · 27/27 tests.", 16, MUTED, space=12)
 txt(tf, "Reproduce on stage:  autopilot index  ·  autopilot eval  ·  bash demo/run_demo.sh", 16, TEAL, bold=True)
 
-out = Path(__file__).resolve().parent / "autopilot-slides.pptx"
+# 7 — LIVE DEMO (embedded video)
+s = slide(); eyebrow(s, "DEMO  ·  the token drop in 30s")
+txt(tb(s, Inches(0.6), Inches(1.0), Inches(12), Inches(0.8)),
+    "Same task, two ways — watch tokens go 11,947 → 299", 26, FG, bold=True)
+_here = Path(__file__).resolve().parent
+_vid = _here / "autopilot-demo.mp4"
+_poster = _here / "poster.png"
+vw, vh = Inches(9.6), Inches(5.4)
+vx = Emu(int((W - vw) / 2)); vy = Inches(1.75)
+s.shapes.add_movie(str(_vid), vx, vy, vw, vh,
+                   poster_frame_image=str(_poster) if _poster.exists() else None,
+                   mime_type="video/mp4")
+
+out = _here / "autopilot-slides.pptx"
 prs.save(str(out)); print("wrote", out)
