@@ -64,34 +64,68 @@ def panel(s, x, y, w, h, accent):
     return sp
 
 
-# 1 — TITLE
-s = slide(footer=False)
-txt(tb(s, Inches(0.9), Inches(1.0), Inches(11), Inches(0.5)), "BETA FUND × EVERMIND  ·  NEXT-GEN INFRASTRUCTURE & CONTEXT", 14, VIOLET, bold=True)
-t = tb(s, Inches(0.9), Inches(2.3), Inches(11.7), Inches(2.6))
-txt(t, "Stop paying Claude to re-read your repo", 44, FG, bold=True)
-txt(t, "A $0 local model keeps a live map of your codebase (SKILL.md + DAG) so Claude Code", 21, MUTED)
-txt(t, "reads the saved context instead of re-exploring — ~99% fewer tokens, same result.", 21, MUTED)
-txt(tb(s, Inches(0.9), Inches(5.3), Inches(11.7), Inches(1)), "Touchdown Labs  ·  github.com/OCWC22/personal-coding-autopilot", 16, TEAL, bold=True)
+def flowbox(s, x, y, w, h, title, sub, color):
+    sp = panel(s, x, y, w, h, color)
+    tf = sp.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    tf.margin_left = Inches(0.1); tf.margin_right = Inches(0.1)
+    txt(tf, title, 13, color, bold=True, align=PP_ALIGN.CENTER, space=2)
+    if sub:
+        txt(tf, sub, 10.5, FG, align=PP_ALIGN.CENTER, space=0)
+    return sp
 
-# 2 — THE PAIN
-s = slide(); eyebrow(s, "THE PAIN")
-txt(tb(s, Inches(0.6), Inches(1.0), Inches(12), Inches(1)), "Every session, Claude Code rediscovers your repo", 32, FG, bold=True)
-p = panel(s, Inches(0.6), Inches(2.2), Inches(5.9), Inches(3.7), ORANGE)
-tf = p.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.TOP
-tf.margin_left = Inches(0.3); tf.margin_top = Inches(0.25)
-txt(tf, "Normal Claude Code", 19, ORANGE, bold=True)
-for l in ["grep → read → read → read to relearn structure",
-          "a 359 KB repo ≈ 90,000 tokens to reload",
-          "repeated every session, every task",
-          "metered/agent billing → frontier prices for repo discovery"]:
-    txt(tf, "•  " + l, 16, FG, space=12)
-p2 = panel(s, Inches(6.8), Inches(2.2), Inches(5.9), Inches(3.7), TEAL)
-tf2 = p2.text_frame; tf2.word_wrap = True; tf2.vertical_anchor = MSO_ANCHOR.TOP
-tf2.margin_left = Inches(0.3); tf2.margin_top = Inches(0.25)
-txt(tf2, "The waste", 19, TEAL, bold=True)
-txt(tf2, "It's not the model — it's re-loading context you already have.", 17, FG, space=14)
-txt(tf2, "An inference-orchestration problem, not a code-model problem.", 17, FG, space=14)
-txt(tf2, "Backed by Repoformer, GraphCoder, LLavaCode, ContextBench.", 14, MUTED)
+
+def arrow(s, x, y):
+    txt(tb(s, x, y, Inches(0.4), Inches(0.4)), "→", 20, MUTED, bold=True, align=PP_ALIGN.CENTER)
+
+
+def band(s, items, y, label, lblcolor, h=1.3, gap=0.45):
+    txt(tb(s, Inches(0.6), Inches(y - 0.45), Inches(12), Inches(0.4)), label, 13, lblcolor, bold=True)
+    n = len(items); bw = (12.1 - (n - 1) * gap) / n
+    for i, (title, sub, col) in enumerate(items):
+        x = 0.6 + i * (bw + gap)
+        flowbox(s, Inches(x), Inches(y), Inches(bw), Inches(h), title, sub, col)
+        if i < n - 1:
+            arrow(s, Inches(x + bw + (gap - 0.4) / 2), Inches(y + h / 2 - 0.2))
+
+
+# 1 — TITLE / WHO / PROBLEM / SOLUTION
+s = slide(footer=False)
+txt(tb(s, Inches(0.9), Inches(0.55), Inches(11.6), Inches(0.5)), "BETA FUND × EVERMIND  ·  NEXT-GEN INFRASTRUCTURE & CONTEXT", 14, VIOLET, bold=True)
+t = tb(s, Inches(0.9), Inches(1.2), Inches(11.6), Inches(1.5))
+txt(t, "Personal Coding Model Autopilot", 38, FG, bold=True)
+txt(t, "William Chen · Touchdown Labs — vendor-neutral inference-optimization research", 17, TEAL, bold=True)
+txt(tb(s, Inches(0.9), Inches(2.75), Inches(11.6), Inches(0.9)),
+    "What I'm building: a local-first coding-agent stack — a $0 model that already knows your repo, plus a personal coding model distilled to your codebase and style.", 16, FG)
+pp = panel(s, Inches(0.9), Inches(3.85), Inches(5.7), Inches(2.4), ORANGE)
+tf = pp.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.TOP
+tf.margin_left = Inches(0.28); tf.margin_top = Inches(0.22); tf.margin_right = Inches(0.2)
+txt(tf, "The problem", 18, ORANGE, bold=True)
+txt(tf, "Claude Code re-reads your repo every session — you pay frontier prices to rediscover structure you already have (≈90K tokens to reload a 359 KB repo, every time).", 15, FG)
+ps = panel(s, Inches(7.0), Inches(3.85), Inches(5.7), Inches(2.4), TEAL)
+tf2 = ps.text_frame; tf2.word_wrap = True; tf2.vertical_anchor = MSO_ANCHOR.TOP
+tf2.margin_left = Inches(0.28); tf2.margin_top = Inches(0.22); tf2.margin_right = Inches(0.2)
+txt(tf2, "The solution", 18, TEAL, bold=True)
+txt(tf2, "Keep a live local map (SKILL.md + DAG) and a small MLX model for the cheap work; escalate to the frontier only for the hard step — ~99% fewer tokens, same result.", 15, FG)
+txt(tb(s, Inches(0.9), Inches(6.5), Inches(11.6), Inches(0.5)), "github.com/OCWC22/personal-coding-autopilot", 15, MUTED, bold=True)
+
+# 2 — THE FULL SYSTEM / ARCHITECTURE
+s = slide(); eyebrow(s, "THE FULL SYSTEM")
+txt(tb(s, Inches(0.6), Inches(0.95), Inches(12.2), Inches(0.7)), "How SFT, RL, local AI & MLX fit together", 27, FG, bold=True)
+txt(tb(s, Inches(0.6), Inches(1.62), Inches(12.2), Inches(0.6)),
+    "Goal: cut frontier-model calls & cost while preserving task success — a coding model that learns your repo and style from your own traces.", 14, MUTED)
+band(s, [
+    ("Your traces + repo", "Claude Code / Codex sessions, accepted diffs", TEAL),
+    ("SFT", "distill GLM-5.1 (teacher) → student", BLUE),
+    ("RL", "verifiable rewards (GRPO): tests pass", VIOLET),
+    ("MLX model", "personal coder · 16 GB Mac · $0", ORANGE),
+], y=2.85, label="OFFLINE — build your personal model (cheap, on-device)", lblcolor=TEAL)
+band(s, [
+    ("Coding task", "question / fix / refactor", TEAL),
+    ("Local context + subagents", "$0 DAG / SKILL.md + RLM — runs local", BLUE),
+    ("Frontier only when hard", "escalate to Claude / Codex", VIOLET),
+], y=4.95, label="ONLINE — every task", lblcolor=TEAL)
+txt(tb(s, Inches(0.6), Inches(6.35), Inches(12.2), Inches(0.5)),
+    "Substrate:  EverMind = long-term memory   ·   Butterbase = state / backend   ·   eval harness = the proof (−98.7% tokens)", 14, MUTED, bold=True)
 
 # 3 — USE CASE
 s = slide(); eyebrow(s, "USE CASE")
