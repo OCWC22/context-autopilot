@@ -1,0 +1,87 @@
+# Stage B GRPO — MoE target (prime-rl style config). TEMPLATE.
+#
+# Model: Qwen/Qwen3-Coder-Next — 80B total / ~3B active MoE coder
+# (RECEIPTS.md cluster 5). This is the production target; it is NOT single-GPU.
+#
+# Footprint (RECEIPTS.md cluster 4): bf16 80B-A3B needs 4 x 80GB (4xH200 or
+# 4xA100-80GB); FP8 with tp=4 fits a single node more tightly. The vLLM
+# inference workers and the FSDP2 trainer must own SEPARATE GPUs.
+#
+# Expert parallelism (EP) is REQUIRED for the MoE: experts shard across GPUs
+# instead of replicating, otherwise the weights do not fit. Tensor parallelism
+# (TP) shards the dense attention/proj layers.
+#
+# Expert-collapse caveat (RECEIPTS.md cluster 5 + cluster 4): RL on a sparse MoE
+# can collapse routing onto a few experts (reward concentrates probability mass
+# on the cheapest-to-improve path), silently shrinking effective capacity. Keep
+# the KL term (beta) on, watch per-expert load-balance / router entropy, and
+# gate on the held-out eval — a few hundred diffs is convention/style
+# adaptation, not new capability.
+
+[model]
+name = "Qwen/Qwen3-Coder-Next"
+trust_remote_code = true
+attn_implementation = "flash_attention_2"
+is_moe = true
+
+[environment]
+# Import path of autopilot.rewards.verifiers_env (exposes load_environment()).
+id = "autopilot.rewards.verifiers_env"
+[environment.args]
+dataset_path = "data/dataset"
+repo_root = ""
+test_cmd = "pytest -q"
+typecheck_cmd = "mypy ."
+lint_cmd = "ruff check ."
+
+[trainer]
+type = "grpo"
+num_generations = 8           # DEFAULT.train.grpo_num_generations
+max_steps = 200               # DEFAULT.train.grpo_max_steps
+beta = 0.04                   # DEFAULT.train.grpo_kl_coef — keep ON to resist expert collapse
+max_completion_length = 1024  # DEFAULT.train.grpo_max_completion_len
+max_prompt_length = 7168      # max_seq_len (8192) - max_completion_length
+per_device_train_batch_size = 1
+gradient_accumulation_steps = 16
+gradient_checkpointing = true
+bf16 = true
+logging_steps = 1
+save_steps = 50
+seed = 0
+
+[inference]
+# vLLM inference workers serve the rollouts; they own their own GPUs, separate
+# from the trainer. 4x80GB bf16, or fewer with FP8 (RECEIPTS.md cluster 4).
+engine = "vllm"
+tensor_parallel_size = 4      # TP across the 4x80GB node
+expert_parallel_size = 4      # EP REQUIRED for the 128-expert MoE
+gpu_memory_utilization = 0.90
+max_model_len = 8192
+enable_expert_parallel = true
+# Optional: FP8 weights halve the footprint so the node fits more comfortably.
+# quantization = "fp8"
+
+[optim]
+lr = 5.0e-7                   # smaller LR for the large MoE
+weight_decay = 0.0
+warmup_ratio = 0.03
+lr_scheduler_type = "constant_with_warmup"
+max_grad_norm = 1.0
+
+[lora]
+# LoRA on a MoE base is the weakest link (RECEIPTS.md cluster 4) — validate the
+# adapter actually loads on the MoE before trusting it. Full-FT is the
+# alternative if the 4x80GB budget allows.
+enabled = true
+r = 8                         # DEFAULT.train.lora_r
+alpha = 16                    # DEFAULT.train.lora_alpha
+dropout = 0.1                 # DEFAULT.train.lora_dropout
+# Include the router + expert MLPs so personalization can reach the MoE path.
+target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+[distributed]
+# Multi-GPU single node by default; bump num_nodes for a larger trainer mesh.
+backend = "fsdp2"             # FSDP2 trainer sharding (RECEIPTS.md cluster 4)
+num_nodes = 1
+tensor_parallel_size = 4      # trainer-side TP to match the model shards
+expert_parallel_size = 4      # trainer-side EP for the MoE experts

@@ -1,0 +1,25 @@
+# Add this block under `providers:` in ~/.hermes/config.yaml to let Hermes run
+# on the local distilled MLX student (OpenAI-compatible, served by
+# `python -m autopilot.mlx_serve.server`). This is ADDITIVE — it does not change
+# your default provider. Switch to it per-run with: hermes chat --provider local_mlx
+#
+# Equivalent CLI (safer than hand-editing; Hermes validates + preserves structure):
+#   hermes config set providers.local_mlx.base_url "http://127.0.0.1:8080/v1"
+#   hermes config set providers.local_mlx.api_key  "not-needed"
+#   hermes config set providers.local_mlx.api_mode "openai"
+#   hermes config set providers.local_mlx.model    "mlx-community/Qwen2.5-Coder-3B-Instruct-4bit"
+#
+# Then run the agent on the local model:
+#   python -m autopilot.mlx_serve.server   # in one terminal (needs Apple Silicon + mlx-lm)
+#   hermes chat --provider local_mlx --model mlx-community/Qwen2.5-Coder-3B-Instruct-4bit
+
+providers:
+  local_mlx:
+    name: "MLX Local (distilled student)"
+    base_url: "http://127.0.0.1:8080/v1"
+    api_key: "not-needed"
+    api_mode: "openai"
+    model: "mlx-community/Qwen2.5-Coder-3B-Instruct-4bit"
+    models:
+      "mlx-community/Qwen2.5-Coder-3B-Instruct-4bit":
+        context_length: 8192

@@ -1,0 +1,15 @@
+# generated / runtime
+autopilot_out/
+.autopilot/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# local env / secrets (sponsor keys: Butterbase, EverMind, Z.ai)
+.env
+*.local

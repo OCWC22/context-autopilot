@@ -1,0 +1,77 @@
+# Stage B GRPO — dense student (prime-rl style config).
+#
+# Model: Qwen/Qwen2.5-Coder-7B-Instruct — the single-GPU-runnable dense student
+# (RECEIPTS.md cluster 5). This config trains LoRA against verifiable rewards
+# (RECEIPTS.md cluster 6: tests are the correctness oracle, kept BINARY) using
+# the autopilot `verifiers` environment.
+#
+# Footprint: dense 7B fits on 1-2 x 80GB. The trainer and the vLLM inference
+# worker should still own separate GPUs; on a single 80GB card use small
+# num_generations + gradient checkpointing. No expert parallelism (the student
+# is dense, not MoE).
+#
+# Honest framing (RECEIPTS.md cluster 5): a few hundred diffs buys
+# style/convention adaptation, NOT new capability — hence strong LoRA
+# regularization + a held-out eval. Keep epochs/steps short to avoid
+# memorization.
+
+[model]
+name = "Qwen/Qwen2.5-Coder-7B-Instruct"
+trust_remote_code = true
+attn_implementation = "flash_attention_2"
+
+[environment]
+# Import path of autopilot.rewards.verifiers_env (exposes load_environment()).
+id = "autopilot.rewards.verifiers_env"
+# Forwarded to load_environment(...). Point repo_root + *_cmd at a real repo to
+# get a live verifiable reward; empty cmds skip that check.
+[environment.args]
+dataset_path = "data/dataset"
+repo_root = ""
+test_cmd = "pytest -q"
+typecheck_cmd = "mypy ."
+lint_cmd = "ruff check ."
+
+[trainer]
+type = "grpo"
+num_generations = 8          # DEFAULT.train.grpo_num_generations
+max_steps = 200              # DEFAULT.train.grpo_max_steps
+beta = 0.04                  # DEFAULT.train.grpo_kl_coef (KL regularization)
+max_completion_length = 1024 # DEFAULT.train.grpo_max_completion_len
+max_prompt_length = 7168     # max_seq_len (8192) - max_completion_length
+per_device_train_batch_size = 1
+gradient_accumulation_steps = 8
+gradient_checkpointing = true
+bf16 = true
+logging_steps = 1
+save_steps = 50
+seed = 0
+
+[inference]
+# vLLM generation worker — runs on its OWN GPU(s), separate from the trainer.
+engine = "vllm"
+tensor_parallel_size = 1
+gpu_memory_utilization = 0.85
+max_model_len = 8192
+enable_lora = true           # serve the freshly-trained adapter by name
+
+[optim]
+lr = 1.0e-6
+weight_decay = 0.0
+warmup_ratio = 0.03
+lr_scheduler_type = "constant_with_warmup"
+max_grad_norm = 1.0
+
+[lora]
+# Strong regularization for the small-data regime (RECEIPTS.md cluster 5).
+enabled = true
+r = 8                        # DEFAULT.train.lora_r
+alpha = 16                   # DEFAULT.train.lora_alpha
+dropout = 0.1                # DEFAULT.train.lora_dropout
+target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+[distributed]
+# Single-node dense run. 1 trainer GPU + 1 inference GPU is the comfortable shape.
+backend = "fsdp2"
+num_nodes = 1
+expert_parallel_size = 1     # dense model: no EP

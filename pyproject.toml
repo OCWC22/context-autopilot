@@ -1,0 +1,43 @@
+[project]
+name = "personal-coding-autopilot"
+version = "0.1.0"
+description = "Turn your Claude Code / Codex traces into a personal coding model: export -> memory + SFT + verifiable-reward RL -> Modal/vLLM serve -> router. Target model: Qwen3-Coder-Next."
+readme = "README.md"
+requires-python = ">=3.10"
+# The offline core (export, dataset, rewards, sandbox, router, cli) depends ONLY
+# on the standard library so it runs anywhere without a GPU or heavy installs.
+dependencies = []
+
+[project.optional-dependencies]
+# Stage A: SFT/LoRA warm-up on a small student (runs on a single consumer GPU).
+train = [
+  "torch>=2.4",
+  "transformers>=4.46",
+  "trl>=0.12",
+  "peft>=0.13",
+  "datasets>=3.0",
+  "accelerate>=1.0",
+]
+# Stage B: verifiable-reward RL (GRPO) via PrimeIntellect verifiers + prime-rl.
+rl = [
+  "verifiers>=0.1.8",
+  "prime-rl",
+  "vllm>=0.12,<0.19",
+]
+# Serving: Modal serverless GPU + vLLM OpenAI-compatible endpoint (scale-to-zero).
+serve = [
+  "modal>=0.64",
+]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+autopilot = "autopilot.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["autopilot*"]
