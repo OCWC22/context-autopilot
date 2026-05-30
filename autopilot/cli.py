@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -422,7 +423,21 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+def _load_dotenv() -> None:
+    """Load ./.env into the environment (no external dep). Existing env wins."""
+    p = Path(".env")
+    if not p.exists():
+        return
+    for line in p.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, _, v = line.partition("=")
+        os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
 def main(argv: list[str] | None = None) -> int:
+    _load_dotenv()
     args = build_parser().parse_args(argv)
     return args.func(args)
 

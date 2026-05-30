@@ -78,8 +78,10 @@ def submit(repo: str | Path = ".", cfg: Config = DEFAULT, dry_run: bool | None =
     bb_app = os.environ.get(cfg.sponsors.butterbase_app_id_env, "")
     bb_key = os.environ.get(cfg.sponsors.butterbase_api_key_env, "")
     ev_key = os.environ.get(cfg.sponsors.evermind_api_key_env, "") or os.environ.get("EVERMIND_API_KEY", "")
+    bb_live = bool(bb_app and bb_key)
+    ev_live = bool(ev_key)
     if dry_run is None:
-        dry_run = not (bb_app and bb_key)
+        dry_run = not (bb_live or ev_live)   # go live if EITHER sponsor is keyed
 
     cmp = _eval_metrics()
     s = cmp["savings"]
@@ -123,23 +125,26 @@ def submit(repo: str | Path = ".", cfg: Config = DEFAULT, dry_run: bool | None =
             "Connect the Butterbase MCP and submit with code " + SUBMISSION_CODE + ".")
         return plan
 
-    # --- live: Butterbase backend + judging submission ---
-    bb = ButterbaseClient(bb_app, bb_key)
+    # --- live: Butterbase backend + judging submission (if keyed) ---
     results: dict[str, Any] = {}
-    try:
-        bb.apply_schema()
-        results["project"] = bb.insert("projects", project_row)
-        for cfg_name in ("frontier_baseline", "local_first"):
-            a = cmp[cfg_name]
-            bb.insert("eval_runs", {
-                "config": cfg_name, "tokens_in": a["tokens_in"], "cost_usd": a["cost_usd"],
-                "retrieval_f1": a["retrieval_f1"], "frontier_calls": a["frontier_calls"], "payload": a,
-            })
-        for art in artifacts:
-            bb.insert("bundle_artifacts", {**art, "version": version})
-        results["butterbase"] = "ok"
-    except (urllib.error.URLError, KeyError) as e:
-        results["butterbase_error"] = str(e)
+    if bb_live:
+        bb = ButterbaseClient(bb_app, bb_key)
+        try:
+            bb.apply_schema()
+            results["project"] = bb.insert("projects", project_row)
+            for cfg_name in ("frontier_baseline", "local_first"):
+                a = cmp[cfg_name]
+                bb.insert("eval_runs", {
+                    "config": cfg_name, "tokens_in": a["tokens_in"], "cost_usd": a["cost_usd"],
+                    "retrieval_f1": a["retrieval_f1"], "frontier_calls": a["frontier_calls"], "payload": a,
+                })
+            for art in artifacts:
+                bb.insert("bundle_artifacts", {**art, "version": version})
+            results["butterbase"] = "ok"
+        except (urllib.error.URLError, KeyError) as e:
+            results["butterbase_error"] = str(e)
+    else:
+        results["butterbase"] = "skipped — set BUTTERBASE_APP_ID + BUTTERBASE_API_KEY (promo " + BUTTERBASE_PROMO + ")"
 
     # --- EverMind: durable agent memory the project is built on ---
     if ev_key:

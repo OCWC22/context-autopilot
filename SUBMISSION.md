@@ -19,7 +19,7 @@ cheap, repetitive work local and escalate to the frontier model only when needed
 - **Eval harness** measures tokens/time/accuracy vs normal Claude Code.
 
 ## Proof (measured by `autopilot eval`)
-- Tokens saved: **98.7%**  ·  Time saved: **98.0%**  ·  Cost saved: **93.9%**
+- Tokens saved: **98.7%**  ·  Time saved: **97.8%**  ·  Cost saved: **93.9%**
 - Frontier calls avoided: **1**  ·  Retrieval F1: **+0.32**  ·  Task success preserved: **True**
 
 ## Sponsor usage
