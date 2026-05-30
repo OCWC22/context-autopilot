@@ -95,17 +95,17 @@ t = tb(s, Inches(0.9), Inches(1.2), Inches(11.6), Inches(1.5))
 txt(t, "Personal Coding Model Autopilot", 38, FG, bold=True)
 txt(t, "William Chen · Touchdown Labs — vendor-neutral inference-optimization research", 17, TEAL, bold=True)
 txt(tb(s, Inches(0.9), Inches(2.75), Inches(11.6), Inches(0.9)),
-    "What I'm building: a local-first coding-agent stack — a $0 model that already knows your repo, plus a personal coding model distilled to your codebase and style.", 16, FG)
+    "What I'm building: a local-first context engine — index ANY folder (code, docs, notes, projects) into reusable structured memory that Hermes, OpenClaw, or any local agent loads instead of rediscovering it every task.", 16, FG)
 pp = panel(s, Inches(0.9), Inches(3.85), Inches(5.7), Inches(2.4), ORANGE)
 tf = pp.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.TOP
 tf.margin_left = Inches(0.28); tf.margin_top = Inches(0.22); tf.margin_right = Inches(0.2)
 txt(tf, "The problem", 18, ORANGE, bold=True)
-txt(tf, "Claude Code re-reads your repo every session — you pay frontier prices to rediscover structure you already have (≈90K tokens to reload a 359 KB repo, every time).", 15, FG)
+txt(tf, "Local agents (Hermes, OpenClaw, Claude Code) rediscover your project every task — code, docs, notes — burning tokens reloading what they already saw (≈90K to reload a 359 KB project).", 15, FG)
 ps = panel(s, Inches(7.0), Inches(3.85), Inches(5.7), Inches(2.4), TEAL)
 tf2 = ps.text_frame; tf2.word_wrap = True; tf2.vertical_anchor = MSO_ANCHOR.TOP
 tf2.margin_left = Inches(0.28); tf2.margin_top = Inches(0.22); tf2.margin_right = Inches(0.2)
 txt(tf2, "The solution", 18, TEAL, bold=True)
-txt(tf2, "Keep a live local map (SKILL.md + DAG) and a small MLX model for the cheap work; escalate to the frontier only for the hard step — ~99% fewer tokens, same result.", 15, FG)
+txt(tf2, "Index it once into a reusable SKILL.md + DAG map. Any local agent reuses it across tasks; a small MLX model does the cheap work, frontier only for the hard step — ~99% fewer tokens.", 15, FG)
 txt(tb(s, Inches(0.9), Inches(6.5), Inches(11.6), Inches(0.5)), "github.com/OCWC22/personal-coding-autopilot", 15, MUTED, bold=True)
 
 # 2 — THE FULL SYSTEM / ARCHITECTURE
@@ -127,15 +127,21 @@ band(s, [
 txt(tb(s, Inches(0.6), Inches(6.35), Inches(12.2), Inches(0.5)),
     "Substrate:  EverMind = long-term memory   ·   Butterbase = state / backend   ·   eval harness = the proof (−98.7% tokens)", 14, MUTED, bold=True)
 
-# 3 — USE CASE
-s = slide(); eyebrow(s, "USE CASE")
-txt(tb(s, Inches(0.6), Inches(1.0), Inches(12), Inches(1)), "You, on a real repo, all day", 32, FG, bold=True)
-tf = tb(s, Inches(0.6), Inches(2.2), Inches(12), Inches(3.5))
-for l in ["Solo founder / small team living in Claude Code or Codex on one codebase.",
-          "Asking codebase questions, fixing tests, scaffolding, refactoring — dozens of times a day.",
-          "Each ask re-pays for repo discovery. The bill compounds outside the model call.",
-          "You want the agent to already know your files, conventions, and prior decisions."]:
-    txt(tf, "•  " + l, 19, FG, space=14)
+# 3 — MODULAR: NOT JUST CODE
+s = slide(); eyebrow(s, "MODULAR — NOT JUST CODE")
+txt(tb(s, Inches(0.6), Inches(1.0), Inches(12.2), Inches(0.8)), "Index anything on your computer", 30, FG, bold=True)
+txt(tb(s, Inches(0.6), Inches(1.72), Inches(12.2), Inches(0.6)),
+    "One CLI turns any folder into reusable structured context (SKILL.md + index) — agents load it instead of re-reading from scratch.", 15, MUTED)
+_domains = [("Codebases", TEAL), ("Docs & notes", BLUE), ("Sales materials", VIOLET),
+            ("Marketing assets", ORANGE), ("Customer research", TEAL), ("Project folders & workflows", BLUE)]
+_gx, _gy, _gw, _gh, _gap = 0.6, 2.5, 3.77, 1.05, 0.4
+for i, (name, col) in enumerate(_domains):
+    r, c = divmod(i, 3)
+    sp = panel(s, Inches(_gx + c * (_gw + _gap)), Inches(_gy + r * (_gh + 0.3)), Inches(_gw), Inches(_gh), col)
+    tfc = sp.text_frame; tfc.vertical_anchor = MSO_ANCHOR.MIDDLE; tfc.word_wrap = True
+    txt(tfc, name, 16, col, bold=True, align=PP_ALIGN.CENTER)
+txt(tb(s, Inches(0.6), Inches(5.5), Inches(12.2), Inches(1)),
+    "Hermes · OpenClaw · Claude Code · any local agent reuse the SAME structured context across tasks — instead of rediscovering everything from scratch every time.", 17, FG, bold=True)
 
 # 4 — THE FIX
 s = slide(); eyebrow(s, "THE FIX")

@@ -26,30 +26,29 @@ small = ImageFont.truetype(MENLO, 18, index=0)
 
 # (kind, text, color). kinds: banner, cmd, out, good, metric, muted, blank
 SCENES = [
-    [("banner", "Stop paying Claude to re-read your repo", TITLE),
-     ("muted", "Personal Coding Model Autopilot — local-first repo context, $0", OUT),
+    [("banner", "Index once. Every agent reuses it.", TITLE),
+     ("muted", "Personal Coding Model Autopilot — reusable context for local agents", OUT),
      ("blank", "", OUT)],
-    # the pain
+    # the problem (Hermes / OpenClaw / any agent)
     [("banner", "The problem", TITLE),
-     ("out", "  Your repo is 359 KB  ~  90,000 tokens.", OUT),
-     ("warn", "  Claude Code re-discovers that structure every session — grep, read, repeat.", ORANGE),
-     ("muted", "  On agent/metered billing you pay frontier prices to relearn what you already know.", OUT)],
-    # the real example, side by side
-    [("cmd", "# real task:  \"fix the failing test\"  (same task, two ways)", PROMPT),
-     ("warn", "  NORMAL Claude Code   ->  explores files  ->  11,947 tokens sent to the model", ORANGE),
-     ("good", "  WITH AUTOPILOT      ->  DAG + SKILL.md already map it  ->  299 tokens (right slice)", GOOD),
-     ("muted", "  same patch · tests still pass", OUT)],
-    # the headline number
-    [("banner", "11,947  ->  299 tokens", GOOD),
-     ("metric", "  -98.7% tokens · -98% time · -94% cost · same result", GOOD),
-     ("muted", "  retrieval F1 +0.32 · 1 frontier call avoided", OUT)],
-    # how — the $0 .md + DAG
-    [("cmd", "autopilot index    # the $0 part, runs on every commit", PROMPT),
-     ("out", "  builds .autopilot/SKILL.md + ARCHITECTURE.md (DAG):", OUT),
-     ("out", "  every file, every function, the call graph — kept fresh, locally, for $0", OUT),
-     ("good", "  Claude Code reads THIS saved context, not the whole repo", GOOD)],
-    [("banner", "Built on EverMind + Butterbase  (LIVE)", GOOD),
-     ("blue", "  Butterbase app_b197i2548pk2 · EverMind memory · code build0530", BLUE),
+     ("warn", "  Hermes, OpenClaw, Claude Code rediscover your project every task —", ORANGE),
+     ("warn", "  re-reading the code, docs, and notes they already saw last time.", ORANGE),
+     ("muted", "  a 359 KB project ~ 90,000 tokens, reloaded again and again.", OUT)],
+    # modular: ANY folder, not just code
+    [("cmd", "autopilot index ~/any-folder      # not just code", PROMPT),
+     ("good", "  codebases · docs · notes · sales · customer research · project folders", GOOD),
+     ("out", "  -> one SKILL.md + DAG: a structured, reusable map of that context", OUT)],
+    # reusable memory
+    [("banner", "SKILL.md = the agent's project memory", TITLE),
+     ("good", "  preloaded once, reused across tasks by Hermes / OpenClaw / Claude Code", GOOD),
+     ("muted", "  the agent loads the map instead of re-exploring from scratch", OUT)],
+    # token before/after
+    [("cmd", "# same task, two ways", PROMPT),
+     ("warn", "  NORMAL agent        ->  rediscovers context  ->  11,947 tokens", ORANGE),
+     ("good", "  WITH SAVED CONTEXT  ->  loads SKILL.md / DAG   ->  299 tokens", GOOD),
+     ("metric", "  -98.7% tokens · same result · context preserved", GOOD)],
+    [("banner", "Reusable context for any local agent", GOOD),
+     ("blue", "  Hermes · OpenClaw · Claude Code  ·  EverMind memory + Butterbase (LIVE)", BLUE),
      ("muted", "  github.com/OCWC22/personal-coding-autopilot", OUT)],
 ]
 
