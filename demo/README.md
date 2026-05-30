@@ -6,7 +6,7 @@
 - **`make_slides.py` / `make_video.py`** — regenerate the deck/video (need python-pptx / Pillow + ffmpeg).
 
 ## Submit (what's done vs the one on-site step)
-- ✅ Code pushed: github.com/OCWC22/personal-coding-autopilot (private).
+- ✅ Code pushed: github.com/OCWC22/context-autopilot (private).
 - ✅ EverMind/EverOS: **live** (key in `.env`; `autopilot submit` writes memory for real).
 - ⏳ Butterbase: set `BUTTERBASE_APP_ID` + `BUTTERBASE_API_KEY` (promo `BUILD0530`), then
   `autopilot submit` writes project/eval/artifacts; submit via **Butterbase MCP** with code **`build0530`**.

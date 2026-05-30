@@ -1,1 +1,1 @@
-"""Test suite for the Personal Coding Model Autopilot offline core (stdlib-only)."""
+"""Test suite for the Context Autopilot offline core (stdlib-only)."""

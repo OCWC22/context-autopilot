@@ -1,4 +1,4 @@
-# RECEIPTS — Personal Coding Model Autopilot
+# RECEIPTS — Context Autopilot
 
 Exa-backed validation of every load-bearing claim, run 2026-05-30. Verdicts:
 `supported` / `partially_supported` / `overclaim`. Read this before pitching —

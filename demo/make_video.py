@@ -27,7 +27,7 @@ small = ImageFont.truetype(MENLO, 18, index=0)
 # (kind, text, color). kinds: banner, cmd, out, good, metric, muted, blank
 SCENES = [
     [("banner", "Index once. Every agent reuses it.", TITLE),
-     ("muted", "Personal Coding Model Autopilot — reusable context for local agents", OUT),
+     ("muted", "Context Autopilot — reusable context for local agents", OUT),
      ("blank", "", OUT)],
     # the problem (Hermes / OpenClaw / any agent)
     [("banner", "The problem", TITLE),
@@ -42,6 +42,11 @@ SCENES = [
     [("banner", "SKILL.md = the agent's project memory", TITLE),
      ("good", "  preloaded once, reused across tasks by Hermes / OpenClaw / Claude Code", GOOD),
      ("muted", "  the agent loads the map instead of re-exploring from scratch", OUT)],
+    # how it extends EverMind + connects Butterbase
+    [("banner", "Local source of truth x cloud memory", TITLE),
+     ("good", "  EverMind: we EXTEND it — the $0 local index is always-fresh personal context", GOOD),
+     ("out", "   decisions + lessons flow to EverMind -> long-context memory across sessions", OUT),
+     ("blue", "  Butterbase: connects via Data API — task state, traces, evals, artifacts (LIVE)", BLUE)],
     # token before/after
     [("cmd", "# same task, two ways", PROMPT),
      ("warn", "  NORMAL agent        ->  rediscovers context  ->  11,947 tokens", ORANGE),
@@ -49,7 +54,7 @@ SCENES = [
      ("metric", "  -98.7% tokens · same result · context preserved", GOOD)],
     [("banner", "Reusable context for any local agent", GOOD),
      ("blue", "  Hermes · OpenClaw · Claude Code  ·  EverMind memory + Butterbase (LIVE)", BLUE),
-     ("muted", "  github.com/OCWC22/personal-coding-autopilot", OUT)],
+     ("muted", "  github.com/OCWC22/context-autopilot", OUT)],
 ]
 
 frames = Path(tempfile.mkdtemp(prefix="demo_frames_"))

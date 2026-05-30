@@ -331,7 +331,7 @@ def _write_jsonl(path: Path, rows) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="autopilot", description="Personal Coding Model Autopilot")
+    p = argparse.ArgumentParser(prog="autopilot", description="Context Autopilot")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     e = sub.add_parser("export", help="read local Claude Code / Codex logs -> dataset")

@@ -1,5 +1,5 @@
 [project]
-name = "personal-coding-autopilot"
+name = "context-autopilot"
 version = "0.1.0"
 description = "Turn your Claude Code / Codex traces into a personal coding model: export -> memory + SFT + verifiable-reward RL -> Modal/vLLM serve -> router. Target model: Qwen3-Coder-Next."
 readme = "README.md"

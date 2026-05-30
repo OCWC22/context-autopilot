@@ -1,4 +1,4 @@
-# Personal Coding Model Autopilot
+# Context Autopilot
 
 Turn your own Claude Code / Codex history into a personal coding model that takes
 low-risk repo work off metered API spend, with a Claude / Codex fallback for the

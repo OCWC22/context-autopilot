@@ -1,4 +1,4 @@
-"""Personal Coding Model Autopilot.
+"""Context Autopilot.
 
 Pipeline: export traces -> build memory + SFT + RL/eval tasks -> train
 (SFT warm-up then verifiable-reward GRPO) -> serve on Modal/vLLM -> route.

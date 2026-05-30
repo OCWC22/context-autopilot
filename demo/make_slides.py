@@ -37,7 +37,7 @@ def slide(footer=True):
         p = tf.paragraphs[0]
         run = p.add_run(); run.text = "EverMind + Butterbase: LIVE  ·  app_b197i2548pk2  ·  build0530"
         run.font.size = Pt(10); run.font.color.rgb = MUTED
-        run2 = p.add_run(); run2.text = f"        {PAGE[0]}/7"; run2.font.size = Pt(10); run2.font.color.rgb = MUTED
+        run2 = p.add_run(); run2.text = f"        {PAGE[0]}/8"; run2.font.size = Pt(10); run2.font.color.rgb = MUTED
     return s
 
 
@@ -92,7 +92,7 @@ def band(s, items, y, label, lblcolor, h=1.3, gap=0.45):
 s = slide(footer=False)
 txt(tb(s, Inches(0.9), Inches(0.55), Inches(11.6), Inches(0.5)), "BETA FUND × EVERMIND  ·  NEXT-GEN INFRASTRUCTURE & CONTEXT", 14, VIOLET, bold=True)
 t = tb(s, Inches(0.9), Inches(1.2), Inches(11.6), Inches(1.5))
-txt(t, "Personal Coding Model Autopilot", 38, FG, bold=True)
+txt(t, "Context Autopilot", 38, FG, bold=True)
 txt(t, "William Chen · Touchdown Labs — vendor-neutral inference-optimization research", 17, TEAL, bold=True)
 txt(tb(s, Inches(0.9), Inches(2.75), Inches(11.6), Inches(0.9)),
     "What I'm building: a local-first context engine — index ANY folder (code, docs, notes, projects) into reusable structured memory that Hermes, OpenClaw, or any local agent loads instead of rediscovering it every task.", 16, FG)
@@ -106,7 +106,7 @@ tf2 = ps.text_frame; tf2.word_wrap = True; tf2.vertical_anchor = MSO_ANCHOR.TOP
 tf2.margin_left = Inches(0.28); tf2.margin_top = Inches(0.22); tf2.margin_right = Inches(0.2)
 txt(tf2, "The solution", 18, TEAL, bold=True)
 txt(tf2, "Index it once into a reusable SKILL.md + DAG map. Any local agent reuses it across tasks; a small MLX model does the cheap work, frontier only for the hard step — ~99% fewer tokens.", 15, FG)
-txt(tb(s, Inches(0.9), Inches(6.5), Inches(11.6), Inches(0.5)), "github.com/OCWC22/personal-coding-autopilot", 15, MUTED, bold=True)
+txt(tb(s, Inches(0.9), Inches(6.5), Inches(11.6), Inches(0.5)), "github.com/OCWC22/context-autopilot", 15, MUTED, bold=True)
 
 # 2 — THE FULL SYSTEM / ARCHITECTURE
 s = slide(); eyebrow(s, "THE FULL SYSTEM")
@@ -126,6 +126,24 @@ band(s, [
 ], y=4.95, label="ONLINE — every task", lblcolor=TEAL)
 txt(tb(s, Inches(0.6), Inches(6.35), Inches(12.2), Inches(0.5)),
     "Substrate:  EverMind = long-term memory   ·   Butterbase = state / backend   ·   eval harness = the proof (−98.7% tokens)", 14, MUTED, bold=True)
+
+# 2b — HOW IT CONNECTS: EVERMIND + BUTTERBASE
+s = slide(); eyebrow(s, "SPONSORS — HOW IT CONNECTS", VIOLET)
+txt(tb(s, Inches(0.6), Inches(1.0), Inches(12.2), Inches(0.8)), "Local source of truth × cloud memory × durable state", 26, FG, bold=True)
+ep = panel(s, Inches(0.6), Inches(2.05), Inches(5.95), Inches(3.5), VIOLET)
+tfe = ep.text_frame; tfe.word_wrap = True; tfe.vertical_anchor = MSO_ANCHOR.TOP
+tfe.margin_left = Inches(0.28); tfe.margin_top = Inches(0.22); tfe.margin_right = Inches(0.2)
+txt(tfe, "EverMind / EverOS — long-term memory", 18, VIOLET, bold=True)
+txt(tfe, "We EXTEND it with a LOCAL source of truth: the $0 index keeps your current files, structure & decisions fresh and deterministic, on-device.", 14, FG, space=10)
+txt(tfe, "Those traces flow into EverMind, so memory is both fresh (local) and persistent across sessions — long-context personal memory.", 14, FG)
+bp = panel(s, Inches(6.78), Inches(2.05), Inches(5.95), Inches(3.5), BLUE)
+tfb = bp.text_frame; tfb.word_wrap = True; tfb.vertical_anchor = MSO_ANCHOR.TOP
+tfb.margin_left = Inches(0.28); tfb.margin_top = Inches(0.22); tfb.margin_right = Inches(0.2)
+txt(tfb, "Butterbase — state & backend", 18, BLUE, bold=True)
+txt(tfb, "We CONNECT via the Data API: projects, task state, tool-call traces, eval results & artifacts persist as structured rows (Postgres + auth + storage).", 14, FG, space=10)
+txt(tfb, "Agents read/write durable state instead of holding it in context. Live: app app_b197i2548pk2.", 14, FG)
+txt(tb(s, Inches(0.6), Inches(5.8), Inches(12.2), Inches(0.7)),
+    "Local = source of truth (now)   ·   EverMind = memory (over time)   ·   Butterbase = state (durable)", 16, TEAL, bold=True)
 
 # 3 — MODULAR: NOT JUST CODE
 s = slide(); eyebrow(s, "MODULAR — NOT JUST CODE")

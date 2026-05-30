@@ -1,6 +1,6 @@
 # Hermes integration (real, installed)
 
-This wires the Personal Coding Model Autopilot into the real
+This wires the Context Autopilot into the real
 [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) you
 have installed (`~/.local/bin/hermes`, source at `~/.hermes/hermes-agent`). The
 result: the Hermes agent can run a **local-first, multi-subagent RLM engineering

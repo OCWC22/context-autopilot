@@ -100,7 +100,7 @@ def submit(repo: str | Path = ".", cfg: Config = DEFAULT, dry_run: bool | None =
     version = bundle["manifest"]["version"]
 
     project_row = {
-        "name": "Personal Coding Model Autopilot",
+        "name": "Context Autopilot",
         "track": "Next-Gen Infrastructure & Context",
         "submission_code": SUBMISSION_CODE,
         "one_liner": one_liner,
