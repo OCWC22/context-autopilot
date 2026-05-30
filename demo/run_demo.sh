@@ -15,6 +15,6 @@ b "3) Eval — local-first (indexed) vs normal Claude Code"
 python3 -m autopilot.cli eval | grep -E "TOKENS|TIME|COST|FRONTIER|ACCURACY"
 
 b "4) Submit — Butterbase (backend) + EverMind (memory, LIVE)"
-python3 -m autopilot.cli submit | python3 -c "import sys,json;d=json.load(sys.stdin);r=d.get('results',{});print('  EverMind:',r.get('evermind'));print('  Butterbase:',r.get('butterbase'));print('  submission_code:',d.get('submission_code'))"
+python3 -m autopilot.cli submit 2>&1 | grep -E '"evermind"|"butterbase"|submission_code|SUBMISSION.md' | sed 's/^[[:space:]]*/  /'
 
 b "done — github.com/OCWC22/personal-coding-autopilot"
