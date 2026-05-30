@@ -19,19 +19,19 @@ BUTTERBASE_PROMO = "BUILD0530"    # $20 credits promo
 SCHEMA = {
     "schema": {"tables": {
         "projects": {"columns": {
-            "id": {"type": "uuid", "primary": True, "default": "gen_random_uuid()"},
+            "id": {"type": "uuid", "primaryKey": True, "default": "gen_random_uuid()"},
             "name": {"type": "text"}, "track": {"type": "text"},
             "submission_code": {"type": "text"}, "one_liner": {"type": "text"},
             "metrics": {"type": "jsonb"}, "created_at": {"type": "timestamptz", "default": "now()"},
         }},
         "eval_runs": {"columns": {
-            "id": {"type": "uuid", "primary": True, "default": "gen_random_uuid()"},
+            "id": {"type": "uuid", "primaryKey": True, "default": "gen_random_uuid()"},
             "config": {"type": "text"}, "tokens_in": {"type": "integer"},
             "cost_usd": {"type": "numeric"}, "retrieval_f1": {"type": "numeric"},
             "frontier_calls": {"type": "integer"}, "payload": {"type": "jsonb"},
         }},
         "bundle_artifacts": {"columns": {
-            "id": {"type": "uuid", "primary": True, "default": "gen_random_uuid()"},
+            "id": {"type": "uuid", "primaryKey": True, "default": "gen_random_uuid()"},
             "path": {"type": "text"}, "sha256": {"type": "text"}, "bytes": {"type": "integer"},
             "version": {"type": "text"},
         }},
