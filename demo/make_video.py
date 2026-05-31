@@ -52,6 +52,12 @@ SCENES = [
      ("warn", "  NORMAL agent        ->  rediscovers context  ->  11,947 tokens", ORANGE),
      ("good", "  WITH SAVED CONTEXT  ->  loads SKILL.md / DAG   ->  299 tokens", GOOD),
      ("metric", "  -98.7% tokens · same result · context preserved", GOOD)],
+    # REAL public repo benchmark
+    [("banner", "Real repo: github.com/psf/requests", TITLE),
+     ("out", "  autopilot index  ->  62 files · 801 functions · 3,166 call edges (whole repo ~147,794 tok)", OUT),
+     ("cmd", "Q: which file & function handle redirects and retries?", PROMPT),
+     ("warn", "  NORMAL: load the repo            ->  ~147,794 tokens", ORANGE),
+     ("good", "  AUTOPILOT: finds src/requests/sessions.py  ->  ~1,025 tokens  (57x, -99.3%)", GOOD)],
     [("banner", "Reusable context for any local agent", GOOD),
      ("blue", "  Hermes · OpenClaw · Claude Code  ·  EverMind memory + Butterbase (LIVE)", BLUE),
      ("muted", "  github.com/OCWC22/context-autopilot", OUT)],

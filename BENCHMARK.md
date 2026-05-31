@@ -44,3 +44,16 @@ cost, duration, and turns from `claude --output-format json`. Local index builds
   via /memories/agent. Needs EVEROS_API_KEY.
 - Both auto-select when keyed; offline local backends otherwise. `autopilot submit` runs
   dry-run without keys.
+
+## D. Real public-repo benchmark — psf/requests (measured)
+
+Cloned `github.com/psf/requests` and ran `autopilot index` + `autopilot repo-context`:
+
+- Index (real DAG): **62 files · 801 functions · 128 import edges · 3,166 call edges**, $0, on-device.
+- Whole repo ≈ **147,794 tokens**.
+- Query "which file & function handle redirect resolution and retries in a Session" →
+  retrieved `src/requests/sessions.py` (correct), `models.py`, `cookies.py`; the relevant
+  files are 236,551 chars (~59,137 tok) but compress to **4,101 chars (~1,025 tokens) — 57.7×**.
+- So the agent gets the **right ~1,025 tokens instead of ~147,794** to reload the repo: **−99.3%**.
+
+Reproduce: `git clone --depth 1 https://github.com/psf/requests /tmp/requests && autopilot index --repo /tmp/requests && autopilot repo-context "which file and function handle redirects and retries in a Session" --repo /tmp/requests`
